@@ -43,13 +43,26 @@ class userController{
         try {
             const {email,password} = req.body
             if(email && password){
-
+                const user = await UserModel.findOne({email:email})
+                if(user != null){
+                    const isMatch = await bcrypt.compare(password,user.password)
+                    if((user.email) && isMatch){
+                        res.send({"status":"WELCOME TO DASHBOARD"})
+                    }
+                    else{
+                        res.send({"status":"Password or email doesnt valid"})
+                    }
+                }
+                else{
+                    res.send({"status":"You are not registered user"})  
+                }
             }
             else{
                 res.send({"status":"All fields are required"})
             }
         } catch (error) {
-            
+            console.log(error);
+            res.send({"status":"Unable to login"})
         }
     }
 }
