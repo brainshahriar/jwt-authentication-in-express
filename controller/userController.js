@@ -60,7 +60,7 @@ class userController{
 
                         const token = jwt.sign({userID:saved_user._id},
                             process.env.JWT_SECRET_KEY,{expiresIn:'5d'})
-                        res.send({"status":"WELCOME TO DASHBOARD" , "token" : token})
+                        res.send({"status":"WELCOME TO DASHBOARD","name": user.email , "token" : token})
                     }
                     else{
                         res.send({"status":"Password or email doesnt valid"})
@@ -83,6 +83,12 @@ class userController{
         if(password && password_confirmation){
             if(password !== password_confirmation){
                 res.send({"status":"Password and confirm password does not match"})
+            }
+            else{
+                const salt = await bcrypt.genSalt(10)
+                const newHashPassword = await bcrypt.hash(password,salt)
+                await UserModel.findByIdAndUpdate(req.user._id,{$set:{password:newHashPassword}})
+                res.send({"status":"Password successfully changed"})
             }
         }
         else{
