@@ -95,6 +95,19 @@ class userController{
             res.send({"status":"All fields are required"})
         }
     }
+    static getAllUser = async(req,res)=>{
+        try {
+            const users = await UserModel.find({})
+             .populate("todos")
+            res.status(200).json({
+                data:users,
+                message:"success"
+            })
+        } catch (error) {
+            console.log(error);
+            res.send({"status":"server error"})
+        }
+    }
 
 }
 
