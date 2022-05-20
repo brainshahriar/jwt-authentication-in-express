@@ -6,6 +6,10 @@ const todoSchema = new mongoose.Schema({
         user:{
             type:mongoose.Types.ObjectId,
             ref:"user"
+        },
+        image:{
+            type:String,
+            required:true
         }
 })
 
